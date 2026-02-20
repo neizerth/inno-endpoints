@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { prisma } from '../lib/prisma.js';
+import { authenticate } from '../lib/auth.js';
 
 const router = Router();
 
@@ -25,7 +26,7 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
   res.json(category);
 });
 
-router.post('/', async (req: Request, res: Response): Promise<void> => {
+router.post('/', authenticate, async (req: Request, res: Response): Promise<void> => {
   const { name, slug } = req.body;
 
   const category = await prisma.category.create({
@@ -35,7 +36,7 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
   res.status(201).json(category);
 });
 
-router.put('/:id', async (req: Request, res: Response): Promise<void> => {
+router.put('/:id', authenticate, async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   const { name, slug } = req.body;
 
@@ -47,7 +48,7 @@ router.put('/:id', async (req: Request, res: Response): Promise<void> => {
   res.json(category);
 });
 
-router.delete('/:id', async (req: Request, res: Response): Promise<void> => {
+router.delete('/:id', authenticate, async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
 
   await prisma.category.delete({

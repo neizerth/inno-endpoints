@@ -10,6 +10,16 @@ const prisma = new PrismaClient({ adapter });
 async function main(): Promise<void> {
   console.log('Seeding database...');
 
+  const admin = await prisma.user.upsert({
+    where: { username: 'admin' },
+    update: {},
+    create: {
+      username: 'admin',
+      password: 'admin123',
+    },
+  });
+  console.log('Admin user created:', admin.username);
+
   const electronics = await prisma.category.upsert({
     where: { slug: 'electronics' },
     update: {},
